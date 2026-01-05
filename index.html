@@ -1,293 +1,326 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Christmas Surprise ❤️</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Christmas Surprise ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;500&display=swap"
+      rel="stylesheet"
+    />
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{
-  background:#050015;
-  overflow:hidden;
-  font-family:Poppins;
-  color:white;
-}
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #050015;
+        overflow: hidden;
+        font-family: Poppins;
+        color: white;
+      }
 
-/* ===== INTRO SCREEN ===== */
-#intro{
-  position:fixed;
-  inset:0;
-  background:radial-gradient(circle,#2b0a3d,#050015);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  z-index:100;
-  transition:1s;
-}
-#intro.hide{
-  opacity:0;
-  pointer-events:none;
-}
-#intro h1{
-  font-family:Pacifico;
-  font-size:48px;
-  color:#ffd6e0;
-  text-shadow:0 0 25px #ff4d6d;
-}
-#intro p{
-  margin-top:15px;
-  font-size:18px;
-  opacity:.8;
-}
-#intro button{
-  margin-top:30px;
-  padding:12px 30px;
-  border:none;
-  border-radius:25px;
-  background:#ff4d6d;
-  color:white;
-  font-size:18px;
-  cursor:pointer;
-}
+      /* ===== INTRO SCREEN ===== */
+      #intro {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(circle, #2b0a3d, #050015);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        transition: 1s;
+      }
+      #intro.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #intro h1 {
+        font-family: Pacifico;
+        font-size: 48px;
+        color: #ffd6e0;
+        text-shadow: 0 0 25px #ff4d6d;
+      }
+      #intro p {
+        margin-top: 15px;
+        font-size: 18px;
+        opacity: 0.8;
+      }
+      #intro button {
+        margin-top: 30px;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        background: #ff4d6d;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+      }
 
-/* ===== SNOW GLOBE ===== */
-#globe{
-  position:absolute;
-  top:50%;left:50%;
-  width:360px;height:360px;
-  border-radius:50%;
-  transform:translate(-50%,-50%);
-  background:radial-gradient(circle at top,#4b1b7a,#0a0015);
-  box-shadow:0 0 70px rgba(255,255,255,.3),
-             inset 0 0 40px rgba(255,255,255,.2);
-  overflow:hidden;
-  cursor:grab;
-  display:none;
-}
+      /* ===== SNOW GLOBE ===== */
+      #globe {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 360px;
+        height: 360px;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle at top, #4b1b7a, #0a0015);
+        box-shadow: 0 0 70px rgba(255, 255, 255, 0.3),
+          inset 0 0 40px rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+        cursor: grab;
+        display: none;
+      }
 
-/* ===== SNOW ===== */
-.snow{
-  position:absolute;
-  font-size:14px;
-  animation:snowFall linear infinite;
-}
-@keyframes snowFall{
-  to{transform:translateY(380px) rotate(360deg)}
-}
+      /* ===== SNOW ===== */
+      .snow {
+        position: absolute;
+        font-size: 14px;
+        animation: snowFall linear infinite;
+      }
+      @keyframes snowFall {
+        to {
+          transform: translateY(380px) rotate(360deg);
+        }
+      }
 
-/* ===== GIFTS ===== */
-.gift{
-  position:absolute;
-  width:32px;height:32px;
-  background:#ff4d6d;
-  border-radius:8px;
-  box-shadow:0 0 15px #ff4d6d;
-  cursor:pointer;
-  transform:scale(.7);
-  opacity:.4;
-  transition:.4s;
-}
-.gift.unlocked{
-  transform:scale(1);
-  opacity:1;
-  animation:pulse 1.2s infinite alternate;
-}
-@keyframes pulse{
-  to{box-shadow:0 0 25px #ffb3c1}
-}
+      /* ===== GIFTS ===== */
+      .gift {
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        background: #ff4d6d;
+        border-radius: 8px;
+        box-shadow: 0 0 15px #ff4d6d;
+        cursor: pointer;
+        transform: scale(0.7);
+        opacity: 0.4;
+        transition: 0.4s;
+      }
+      .gift.unlocked {
+        transform: scale(1);
+        opacity: 1;
+        animation: pulse 1.2s infinite alternate;
+      }
+      @keyframes pulse {
+        to {
+          box-shadow: 0 0 25px #ffb3c1;
+        }
+      }
 
-/* ===== POPUP ===== */
-#popup{
-  position:fixed;
-  inset:0;
-  backdrop-filter:blur(10px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  opacity:0;
-  pointer-events:none;
-  transition:.6s;
-}
-#popup.show{
-  opacity:1;
-  pointer-events:auto;
-}
-#card{
-  background:rgba(255,255,255,.15);
-  padding:30px;
-  border-radius:25px;
-  text-align:center;
-  max-width:320px;
-}
-#card h1{
-  font-family:Pacifico;
-  color:#ffb3c1;
-}
-#card p{
-  margin-top:15px;
-  font-size:16px;
-}
-button{
-  margin-top:20px;
-  padding:10px 25px;
-  border:none;
-  border-radius:20px;
-  background:#ff4d6d;
-  color:white;
-  font-size:16px;
-  cursor:pointer;
-}
+      /* ===== POPUP ===== */
+      #popup {
+        position: fixed;
+        inset: 0;
+        backdrop-filter: blur(10px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.6s;
+      }
+      #popup.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #card {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 30px;
+        border-radius: 25px;
+        text-align: center;
+        max-width: 320px;
+      }
+      #card h1 {
+        font-family: Pacifico;
+        color: #ffb3c1;
+      }
+      #card p {
+        margin-top: 15px;
+        font-size: 16px;
+      }
+      button {
+        margin-top: 20px;
+        padding: 10px 25px;
+        border: none;
+        border-radius: 20px;
+        background: #ff4d6d;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+      }
 
-/* ===== FINAL NAME ===== */
-#finalName{
-  position:fixed;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%) scale(0);
-  font-family:Pacifico;
-  font-size:48px;
-  color:#ffd6e0;
-  text-shadow:0 0 30px #ff4d6d;
-  transition:1s;
-  z-index:50;
-}
+      /* ===== FINAL NAME ===== */
+      #finalName {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        font-family: Pacifico;
+        font-size: 48px;
+        color: #ffd6e0;
+        text-shadow: 0 0 30px #ff4d6d;
+        transition: 1s;
+        z-index: 50;
+      }
 
-/* ===== FIREWORKS ===== */
-canvas{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-}
-</style>
-</head>
+      /* ===== FIREWORKS ===== */
+      canvas {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
 
-<body>
+  <body>
+    <!-- CHANGE NAME HERE -->
+    <script>
+      const GF_NAME = "Apne sathi ka naam  ❤️";
+    </script>
 
-<!-- CHANGE NAME HERE -->
-<script>
-const GF_NAME = "YOUR LOVE NAME ❤️";
-</script>
+    <!-- INTRO -->
+    <div id="intro">
+      <h1 id="wish"></h1>
+      <p>Something magical is waiting for you 🎄</p>
+      <button onclick="startGame()">Tap to Begin 🎁</button>
+    </div>
 
-<!-- INTRO -->
-<div id="intro">
-  <h1 id="wish"></h1>
-  <p>Something magical is waiting for you 🎄</p>
-  <button onclick="startGame()">Tap to Begin 🎁</button>
-</div>
+    <div id="globe"></div>
 
-<div id="globe"></div>
+    <div id="popup">
+      <div id="card">
+        <h1>MY heartbeat ❤️</h1>
+        <p id="msg"></p>
+        <button onclick="closePopup()">Continue</button>
+      </div>
+    </div>
 
-<div id="popup">
-  <div id="card">
-    <h1>My Love ❤️</h1>
-    <p id="msg"></p>
-    <button onclick="closePopup()">Continue</button>
-  </div>
-</div>
+    <div id="finalName"></div>
+    <canvas id="fw"></canvas>
 
-<div id="finalName"></div>
-<canvas id="fw"></canvas>
+    <script>
+      // ===== TYPING WISH =====
+      const text = "Merry Christmas My Love 🎄❤️";
+      let i = 0;
+      let wish = document.getElementById("wish");
+      let type = setInterval(() => {
+        if (i < text.length) {
+          wish.innerHTML += text.charAt(i++);
+        } else clearInterval(type);
+      }, 120);
 
-<script>
-// ===== TYPING WISH =====
-const text="Merry Christmas My Love 🎄❤️";
-let i=0;
-let wish=document.getElementById("wish");
-let type=setInterval(()=>{
-  if(i<text.length){
-    wish.innerHTML+=text.charAt(i++);
-  }else clearInterval(type);
-},120);
+      // ===== START GAME =====
+      function startGame() {
+        document.getElementById("intro").classList.add("hide");
+        document.getElementById("globe").style.display = "block";
+        initGame();
+      }
 
-// ===== START GAME =====
-function startGame(){
- document.getElementById("intro").classList.add("hide");
- document.getElementById("globe").style.display="block";
- initGame();
-}
+      // ===== GAME LOGIC =====
+      function initGame() {
+        const globe = document.getElementById("globe");
 
-// ===== GAME LOGIC =====
-function initGame(){
- const globe=document.getElementById("globe");
+        for (let i = 0; i < 40; i++) {
+          let s = document.createElement("div");
+          s.className = "snow";
+          s.innerHTML = "❄";
+          s.style.left = Math.random() * 360 + "px";
+          s.style.animationDuration = 4 + Math.random() * 5 + "s";
+          globe.appendChild(s);
+        }
 
- for(let i=0;i<40;i++){
-  let s=document.createElement("div");
-  s.className="snow";
-  s.innerHTML="❄";
-  s.style.left=Math.random()*360+"px";
-  s.style.animationDuration=4+Math.random()*5+"s";
-  globe.appendChild(s);
- }
+        const messages = [
+          "You are my favorite gift 🎁",
+          "Every moment with you is magic ✨",
+          "My heart chose you ❤️",
+          "You are my Christmas miracle 🎄",
+          "Forever with you 💍",
+          "I LOVE YOU 💕",
+        ];
 
- const messages=[
-  "You are my favorite gift 🎁",
-  "Every moment with you is magic ✨",
-  "My heart chose you ❤️",
-  "You are my Christmas miracle 🎄",
-  "Forever with you 💍"
- ];
+        let current = 0;
+        const pos = [
+          [60, 250],
+          [140, 280],
+          [220, 250],
+          [110, 210],
+          [180, 210],
+        ];
 
- let current=0;
- const pos=[[60,250],[140,280],[220,250],[110,210],[180,210]];
+        pos.forEach((p, i) => {
+          let g = document.createElement("div");
+          g.className = "gift";
+          g.style.left = p[0] + "px";
+          g.style.top = p[1] + "px";
+          if (i === 0) g.classList.add("unlocked");
+          g.onclick = () => openGift(i);
+          globe.appendChild(g);
+        });
 
- pos.forEach((p,i)=>{
-  let g=document.createElement("div");
-  g.className="gift";
-  g.style.left=p[0]+"px";
-  g.style.top=p[1]+"px";
-  if(i===0) g.classList.add("unlocked");
-  g.onclick=()=>openGift(i);
-  globe.appendChild(g);
- });
+        function openGift(i) {
+          if (i !== current) return;
+          document.getElementById("msg").innerText = messages[i];
+          document.getElementById("popup").classList.add("show");
+        }
 
- function openGift(i){
-  if(i!==current) return;
-  document.getElementById("msg").innerText=messages[i];
-  document.getElementById("popup").classList.add("show");
- }
+        window.closePopup = function () {
+          document.getElementById("popup").classList.remove("show");
+          document.querySelectorAll(".gift")[current].style.display = "none";
+          current++;
+          if (current < 5) {
+            document
+              .querySelectorAll(".gift")
+              [current].classList.add("unlocked");
+          } else finalMoment();
+        };
 
- window.closePopup=function(){
-  document.getElementById("popup").classList.remove("show");
-  document.querySelectorAll(".gift")[current].style.display="none";
-  current++;
-  if(current<5){
-    document.querySelectorAll(".gift")[current].classList.add("unlocked");
-  }else finalMoment();
- }
+        function finalMoment() {
+          let n = document.getElementById("finalName");
+          n.innerText = GF_NAME;
+          n.style.transform = "translate(-50%,-50%) scale(1)";
+          startFireworks();
+        }
+      }
 
- function finalMoment(){
-  let n=document.getElementById("finalName");
-  n.innerText=GF_NAME;
-  n.style.transform="translate(-50%,-50%) scale(1)";
-  startFireworks();
- }
-}
-
-// ===== FIREWORKS =====
-const c=document.getElementById("fw"),ctx=c.getContext("2d");
-c.width=innerWidth;c.height=innerHeight;
-let parts=[];
-function startFireworks(){
- for(let i=0;i<180;i++){
-  parts.push({x:Math.random()*c.width,y:Math.random()*c.height/2,
-    vx:(Math.random()-0.5)*6,vy:(Math.random()-0.5)*6,a:1});
- }
- requestAnimationFrame(drawFW);
-}
-function drawFW(){
- ctx.clearRect(0,0,c.width,c.height);
- parts.forEach(p=>{
-  p.x+=p.vx;p.y+=p.vy;p.a-=0.015;
-  ctx.globalAlpha=p.a;
-  ctx.fillStyle="#ffb3c1";
-  ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fill();
- });
- parts=parts.filter(p=>p.a>0);
- if(parts.length) requestAnimationFrame(drawFW);
-}
-</script>
-
-</body>
+      // ===== FIREWORKS =====
+      const c = document.getElementById("fw"),
+        ctx = c.getContext("2d");
+      c.width = innerWidth;
+      c.height = innerHeight;
+      let parts = [];
+      function startFireworks() {
+        for (let i = 0; i < 180; i++) {
+          parts.push({
+            x: Math.random() * c.width,
+            y: (Math.random() * c.height) / 2,
+            vx: (Math.random() - 0.5) * 6,
+            vy: (Math.random() - 0.5) * 6,
+            a: 1,
+          });
+        }
+        requestAnimationFrame(drawFW);
+      }
+      function drawFW() {
+        ctx.clearRect(0, 0, c.width, c.height);
+        parts.forEach((p) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.a -= 0.015;
+          ctx.globalAlpha = p.a;
+          ctx.fillStyle = "#ffb3c1";
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        parts = parts.filter((p) => p.a > 0);
+        if (parts.length) requestAnimationFrame(drawFW);
+      }
+    </script>
+  </body>
 </html>
