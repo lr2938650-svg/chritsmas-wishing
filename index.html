@@ -1,109 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>SoulRoom 💖</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 body{margin:0;font-family:Arial;background:#fff0f5}
-
-/* LOGIN */
-#login{height:100vh;display:flex;justify-content:center;align-items:center}
-.card{background:#fff;padding:22px;border-radius:18px;width:90%;max-width:360px}
+#login,#incoming{position:fixed;inset:0;display:flex;justify-content:center;align-items:center}
+#chat,#video{display:none;height:100vh;flex-direction:column}
+.card{background:#fff;padding:20px;border-radius:16px;width:90%;max-width:360px}
 input,button{padding:14px;border-radius:12px;border:none;width:100%;margin-top:10px}
 button{background:#ff5c8a;color:#fff;font-weight:bold}
-
-/* CHAT */
-#chat{display:none;height:100vh;flex-direction:column}
-.header{background:#ff5c8a;color:#fff;padding:12px;display:flex;justify-content:space-between;align-items:center}
+.header{background:#ff5c8a;color:#fff;padding:12px;display:flex;justify-content:space-between}
 .messages{flex:1;overflow:auto;padding:10px}
 .msg{padding:10px;border-radius:14px;margin:6px;max-width:70%}
 .me{background:#ff5c8a;color:#fff;margin-left:auto}
 .you{background:#eee}
-
-/* INPUT BAR */
-.inputBar{display:flex;padding:8px;gap:8px}
-#msgInput{flex:1;font-size:16px;padding:14px}
-#sendBtn{width:70px}
-
-/* INCOMING CALL */
-#incoming{
-position:fixed;inset:0;display:none;
-justify-content:center;align-items:center;
-background:rgba(0,0,0,.85);z-index:99;color:#fff;
-}
-#incoming .box{
-background:#222;padding:22px;border-radius:16px;
-text-align:center;width:260px;
-}
-
-/* VIDEO CALL */
-#videoCall{
-display:none;
-background:#000;
-height:100vh;
-width:100vw;
-flex-direction:row;
-}
-video{
-width:50%;
-height:100%;
-object-fit:cover;
-}
+#incoming{display:none;background:rgba(0,0,0,.8);color:#fff;z-index:10}
+#incoming .box{background:#222;padding:20px;border-radius:14px;width:260px;text-align:center}
+#video{background:#000;flex-direction:row}
+video{width:50%;height:100%;object-fit:cover}
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
 <div id="login">
   <div class="card">
     <h3>SoulRoom 🔐</h3>
-    <input id="nameInput" placeholder="Your name">
-    <input id="pinInput" placeholder="PIN">
-    <button id="enterBtn">Enter</button>
+    <input id="name" placeholder="Your name">
+    <input id="pin" placeholder="PIN">
+    <button id="enter">Enter</button>
   </div>
 </div>
 
-<!-- CHAT -->
 <div id="chat">
   <div class="header">
     <span>OnlyUs 💖</span>
-    <button id="callBtn">📞</button>
+    <button id="call">📞</button>
   </div>
-
-  <div id="messages" class="messages"></div>
-
-  <div class="inputBar">
-    <input id="msgInput" placeholder="Type message…">
-    <button id="sendBtn">Send</button>
+  <div class="messages" id="msgs"></div>
+  <div style="display:flex;padding:8px;gap:8px">
+    <input id="text" style="flex:1;padding:14px">
+    <button id="send">Send</button>
   </div>
 </div>
 
-<!-- INCOMING CALL -->
 <div id="incoming">
   <div class="box">
     <h3>📞 Incoming Call</h3>
-    <p id="callerText"></p>
-    <button id="acceptBtn">Accept</button>
-    <button id="rejectBtn">Reject</button>
+    <p id="caller"></p>
+    <button id="accept">Accept</button>
+    <button id="reject">Reject</button>
   </div>
 </div>
 
-<!-- VIDEO -->
-<div id="videoCall">
-  <video id="localVideo" autoplay muted playsinline></video>
-  <video id="remoteVideo" autoplay playsinline></video>
+<div id="video">
+  <video id="local" autoplay muted playsinline></video>
+  <video id="remote" autoplay playsinline></video>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
-
-/* FIREBASE */
 firebase.initializeApp({
   apiKey:"AIzaSyAdpLNU2c-C5KxJv2weJECSpoghz_NGNtM",
   databaseURL:"https://soulroom-4e31d-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -111,98 +71,84 @@ firebase.initializeApp({
 const db=firebase.database();
 const room=new URLSearchParams(location.search).get("room")||"love";
 
-/* DOM */
-const login=document.getElementById("login");
-const chat=document.getElementById("chat");
-const messages=document.getElementById("messages");
-const incoming=document.getElementById("incoming");
-const videoCall=document.getElementById("videoCall");
-
-const localVideo=document.getElementById("localVideo");
-const remoteVideo=document.getElementById("remoteVideo");
-
-const nameInput=document.getElementById("nameInput");
-const pinInput=document.getElementById("pinInput");
-const msgInput=document.getElementById("msgInput");
-const callerText=document.getElementById("callerText");
+const nameInput=document.getElementById("name");
+const pinInput=document.getElementById("pin");
+const enterBtn=document.getElementById("enter");
+const sendBtn=document.getElementById("send");
+const callBtn=document.getElementById("call");
 
 let user, pc, localStream;
+const cfg={iceServers:[{urls:"stun:stun.l.google.com:19302"}]};
 
-/* LOGIN */
 enterBtn.onclick=()=>{
+  if(!nameInput.value || !pinInput.value){
+    alert("Fill all fields");
+    return;
+  }
   user=nameInput.value.trim();
-  if(!user||!pinInput.value.trim()) return alert("Fill all fields");
   login.style.display="none";
   chat.style.display="flex";
-  listenMessages();
-  listenCalls();
+  listenChat();
+  listenCall();
 };
 
-/* CHAT */
 sendBtn.onclick=()=>{
-  if(!msgInput.value.trim())return;
-  db.ref(`rooms/${room}/msgs`).push({u:user,t:msgInput.value});
-  msgInput.value="";
+  if(!text.value)return;
+  db.ref(`rooms/${room}/msgs`).push({u:user,t:text.value});
+  text.value="";
 };
 
-function listenMessages(){
+function listenChat(){
   db.ref(`rooms/${room}/msgs`).on("child_added",s=>{
     const m=s.val();
     const d=document.createElement("div");
     d.className="msg "+(m.u===user?"me":"you");
     d.innerText=m.t;
-    messages.appendChild(d);
-    messages.scrollTop=messages.scrollHeight;
+    msgs.appendChild(d);
+    msgs.scrollTop=msgs.scrollHeight;
   });
 }
 
-/* CALL */
 callBtn.onclick=()=>{
   db.ref(`calls/${room}`).set({from:user,status:"ringing"});
 };
 
-function listenCalls(){
+function listenCall(){
   db.ref(`calls/${room}`).on("value",async s=>{
     const c=s.val();
-    if(!c) return;
-
+    if(!c)return;
     if(c.status==="ringing" && c.from!==user){
-      callerText.innerText=c.from+" is calling…";
+      caller.innerText=c.from+" is calling…";
       incoming.style.display="flex";
     }
-
-    if(c.status==="accepted"){
-      incoming.style.display="none";
-      if(c.from===user) startVideo(true);
+    if(c.status==="accepted" && c.from===user){
+      startPeer(true);
     }
   });
 }
 
-/* ACCEPT / REJECT */
-acceptBtn.onclick=async ()=>{
+accept.onclick=async ()=>{
   await db.ref(`calls/${room}`).update({status:"accepted"});
   incoming.style.display="none";
-  startVideo(false);
+  startPeer(false);
 };
-rejectBtn.onclick=()=>{
+
+reject.onclick=()=>{
   db.ref(`calls/${room}`).remove();
   incoming.style.display="none";
 };
 
-/* WEBRTC */
-const rtcConfig={iceServers:[{urls:"stun:stun.l.google.com:19302"}]};
-
-async function startVideo(isCaller){
+async function startPeer(isCaller){
   chat.style.display="none";
-  videoCall.style.display="flex";
+  video.style.display="flex";
 
   localStream=await navigator.mediaDevices.getUserMedia({video:true,audio:true});
-  localVideo.srcObject=localStream;
+  local.srcObject=localStream;
 
-  pc=new RTCPeerConnection(rtcConfig);
+  pc=new RTCPeerConnection(cfg);
   localStream.getTracks().forEach(t=>pc.addTrack(t,localStream));
 
-  pc.ontrack=e=>remoteVideo.srcObject=e.streams[0];
+  pc.ontrack=e=>remote.srcObject=e.streams[0];
   pc.onicecandidate=e=>{
     if(e.candidate){
       db.ref(`calls/${room}/ice`).push({by:user,c:e.candidate});
@@ -216,10 +162,9 @@ async function startVideo(isCaller){
   }
 }
 
-/* SIGNALING */
 db.ref(`calls/${room}/offer`).on("value",async s=>{
-  if(!s.exists()||pc) return;
-  await startVideo(false);
+  if(!s.exists()||pc)return;
+  await startPeer(false);
   await pc.setRemoteDescription(new RTCSessionDescription(s.val()));
   const ans=await pc.createAnswer();
   await pc.setLocalDescription(ans);
@@ -237,8 +182,6 @@ db.ref(`calls/${room}/ice`).on("child_added",s=>{
   if(pc&&d.by!==user){
     pc.addIceCandidate(new RTCIceCandidate(d.c));
   }
-});
-
 });
 </script>
 </body>
