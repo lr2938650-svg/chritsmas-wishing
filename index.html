@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>OnlyUs 💖 Video Call</title>
+<title>OnlyUs 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -87,16 +87,14 @@ width:260px;
     <span>OnlyUs 💖</span>
     <button id="callBtn">📞</button>
   </div>
-
   <div id="messages" class="messages"></div>
-
   <div class="inputBar">
     <input id="msgInput" placeholder="Type message…">
     <button id="sendBtn">Send</button>
   </div>
 </div>
 
-<!-- INCOMING CALL -->
+<!-- INCOMING -->
 <div id="incoming">
   <div class="box">
     <h3>📞 Incoming Call</h3>
@@ -106,7 +104,7 @@ width:260px;
   </div>
 </div>
 
-<!-- VIDEO CALL -->
+<!-- VIDEO -->
 <div id="videoBox">
   <video id="remoteVideo" autoplay playsinline></video>
   <video id="localVideo" autoplay muted playsinline></video>
@@ -117,7 +115,7 @@ width:260px;
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-/* 🔥 NEW FIREBASE CONFIG (REPLACED) */
+/* 🔥 FIREBASE CONFIG (NEW) */
 firebase.initializeApp({
   apiKey: "AIzaSyDHYZDkcI0d7bm5CxXtSJQRhlhTkqL1Piw",
   authDomain: "onlyus-44a12.firebaseapp.com",
@@ -131,7 +129,7 @@ firebase.initializeApp({
 const db = firebase.database();
 const room = new URLSearchParams(location.search).get("room") || "love";
 
-/* TURN + STUN (ONE-WAY FIX) */
+/* TURN + STUN */
 const rtcConfig = {
   iceServers:[
     {urls:"stun:stun.l.google.com:19302"},
@@ -160,7 +158,6 @@ enterBtn.onclick = () => {
   chat.style.display="flex";
 
   db.ref(`calls/${room}`).remove(); // stale cleanup
-
   listenChat();
   listenCalls();
 };
@@ -192,10 +189,14 @@ async function createPeer(){
   };
 
   pc.onicecandidate = e => {
-    if(e.candidate){
+    if(e.candidate && e.candidate.candidate){
       db.ref(`calls/${room}/ice`).push({
         by:user,
-        c:e.candidate
+        c:{
+          candidate:e.candidate.candidate,
+          sdpMid:e.candidate.sdpMid,
+          sdpMLineIndex:e.candidate.sdpMLineIndex
+        }
       });
     }
   };
@@ -217,7 +218,7 @@ callBtn.onclick = async () => {
 
   db.ref(`calls/${room}`).set({
     from:user,
-    offer:offer,
+    offer,
     status:"ringing",
     time:Date.now()
   });
@@ -271,15 +272,25 @@ rejectBtn.onclick = () => {
   db.ref(`calls/${room}`).remove();
 };
 
-/* ICE */
-db.ref(`calls/${room}/ice`).on("child_added",s=>{
+/* ICE SAFE ADD */
+db.ref(`calls/${room}/ice`).on("child_added", async s=>{
   const d=s.val();
-  if(pc && d.by!==user){
-    pc.addIceCandidate(new RTCIceCandidate(d.c));
+  if(!pc || d.by===user) return;
+
+  const c=d.c;
+  if(!c || (!c.sdpMid && c.sdpMLineIndex===null)) return;
+
+  try{
+    if(!pc.remoteDescription){
+      await new Promise(r=>setTimeout(r,300));
+    }
+    await pc.addIceCandidate(new RTCIceCandidate(c));
+  }catch(e){
+    console.warn("ICE ignored:",e.message);
   }
 });
 
-/* END CALL */
+/* END */
 endCall.onclick = () => {
   if(pc) pc.close();
   if(localStream) localStream.getTracks().forEach(t=>t.stop());
