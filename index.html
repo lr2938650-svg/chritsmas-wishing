@@ -5,16 +5,16 @@
 <title>Private Chat Room 💬</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<!-- 🔥 MOBILE-FRIENDLY & WHATSAPP-LIKE UI -->
 <style>
+/* RESET + BODY */
 *{box-sizing:border-box;margin:0;padding:0;}
 body{
   font-family:'Helvetica Neue',sans-serif;
   background:#0b141a;
   color:#fff;
+  height:100vh;
   display:flex;
   flex-direction:column;
-  height:100vh;
   overflow:hidden;
 }
 
@@ -24,41 +24,43 @@ body{
   flex-direction:column;
   justify-content:center;
   align-items:center;
-  height:100%;
+  flex:1;
   padding:20px;
 }
 #join h2{
   margin-bottom:20px;
-  font-size:24px;
+  font-size:28px;
+  font-weight:bold;
   color:#25d366;
+  text-align:center;
 }
-#join input, #join button{
+#join input{
   width:100%;
   max-width:360px;
-  margin:8px 0;
-  padding:12px 15px;
+  margin:10px 0;
+  padding:14px 18px;
   border-radius:25px;
   border:none;
   font-size:16px;
 }
 #join button{
+  width:100%;
+  max-width:360px;
+  margin-top:15px;
+  padding:14px 0;
+  border-radius:25px;
+  border:none;
+  font-size:16px;
+  font-weight:bold;
   background:#25d366;
   color:#000;
-  font-weight:bold;
   cursor:pointer;
   transition:0.2s;
 }
-#join button:hover{
-  background:#1ebe57;
-}
+#join button:hover{background:#1ebe57;}
 
 /* CHAT SCREEN */
-#chat{
-  display:flex;
-  flex-direction:column;
-  height:100vh;
-  width:100%;
-}
+#chat{display:flex;flex-direction:column;height:100%;width:100%;}
 
 /* HEADER */
 header{
@@ -76,8 +78,9 @@ header span{
   overflow:hidden;
   text-overflow:ellipsis;
   white-space:nowrap;
-  max-width:60%;
+  max-width:55%;
 }
+header .header-buttons{display:flex;gap:8px;}
 header button{
   background:#25d366;
   color:#000;
@@ -86,12 +89,9 @@ header button{
   padding:8px 12px;
   cursor:pointer;
   font-size:16px;
-  margin-left:5px;
   flex-shrink:0;
 }
-header button:hover{
-  background:#1ebe57;
-}
+header button:hover{background:#1ebe57;}
 
 /* MESSAGES AREA */
 #messages{
@@ -108,43 +108,31 @@ header button:hover{
 /* MESSAGE BUBBLES */
 .msg{
   max-width:75%;
-  padding:10px 14px;
-  border-radius:20px;
+  padding:12px 16px;
+  border-radius:22px;
   word-wrap:break-word;
   font-size:15px;
-  line-height:1.3;
+  line-height:1.4;
   animation:fadeIn 0.2s ease;
+  word-break:break-word;
 }
-.me{
-  align-self:flex-end;
-  background:#25d366;
-  color:#000;
-  border-bottom-right-radius:4px;
-}
-.other{
-  align-self:flex-start;
-  background:#2a2f33;
-  color:#fff;
-  border-bottom-left-radius:4px;
-}
-.msg img{
-  max-width:70%;
-  border-radius:12px;
-}
+.me{align-self:flex-end;background:#25d366;color:#000;border-bottom-right-radius:6px;}
+.other{align-self:flex-start;background:#2a2f33;color:#fff;border-bottom-left-radius:6px;}
+.msg img{max-width:100%;border-radius:12px;display:block;margin-top:5px;}
 
 /* FOOTER INPUT BAR */
 footer{
   display:flex;
   align-items:center;
   gap:8px;
-  padding:8px 10px;
+  padding:10px;
   background:#202c33;
   flex-shrink:0;
 }
 footer input[type="text"]{
   flex:1;
   border-radius:25px;
-  padding:12px 15px;
+  padding:12px 16px;
   font-size:15px;
   border:none;
   outline:none;
@@ -163,25 +151,30 @@ footer button{
   justify-content:center;
   cursor:pointer;
   border:none;
+  flex-shrink:0;
 }
-footer button:hover{
-  background:#1ebe57;
-}
+footer button:hover{background:#1ebe57;}
 
 /* VIDEO ELEMENTS */
+.video-container{
+  display:flex;
+  justify-content:space-between;
+  padding:5px 10px;
+  gap:5px;
+  flex-wrap:wrap;
+}
 video{
-  width:48%;
+  flex:1 1 48%;
   max-height:220px;
   border-radius:12px;
-  margin:5px 0;
   background:#000;
 }
 
-/* POPUP */
+/* POPUPS */
 #popup,#lock{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.8);
+  background:rgba(0,0,0,0.85);
   display:none;
   justify-content:center;
   align-items:center;
@@ -189,53 +182,47 @@ video{
 }
 .popupBox{
   background:#202c33;
-  padding:20px;
-  border-radius:15px;
+  padding:25px;
+  border-radius:18px;
   text-align:center;
   width:90%;
-  max-width:360px;
+  max-width:380px;
 }
-.popupBox h3{
-  margin-bottom:15px;
-  color:#25d366;
-}
+.popupBox h3{margin-bottom:15px;color:#25d366;font-size:20px;}
+.popupBox p{margin-bottom:15px;font-size:14px;color:#ccc;}
 .popupBox button{
-  padding:10px 15px;
-  margin:8px 5px;
+  padding:12px 18px;
+  margin:8px 6px;
   width:45%;
   border-radius:12px;
   border:none;
   cursor:pointer;
+  font-weight:bold;
 }
-.popupBox button:hover{
-  background:#1ebe57;
-}
+.popupBox button:hover{background:#1ebe57;}
 
 /* BLUR ON LOCK */
-.blur{
-  filter:blur(8px);
-}
+.blur{filter:blur(8px);}
 
 /* ANIMATIONS */
-@keyframes fadeIn{
-  0%{opacity:0;transform:translateY(10px);}
-  100%{opacity:1;transform:translateY(0);}
-}
+@keyframes fadeIn{0%{opacity:0;transform:translateY(10px);}100%{opacity:1;transform:translateY(0);}}
 
 /* MOBILE RESPONSIVE */
 @media(max-width:480px){
-  header span{font-size:16px;max-width:55%;}
+  header span{font-size:16px;max-width:50%;}
   .msg{font-size:14px;max-width:80%;}
   footer button{width:45px;height:45px;font-size:18px;}
-  footer input[type="text"]{font-size:14px;}
-  video{width:100%;max-height:200px;}
+  footer input[type="text"]{font-size:14px;padding:10px 14px;}
+  video{flex:1 1 100%;max-height:180px;}
+  .video-container{padding:5px;}
+  #join h2{font-size:24px;}
 }
 </style>
 </head>
 
 <body>
 
-<!-- JOIN -->
+<!-- JOIN SCREEN -->
 <div id="join">
 <h2>Private Chat Room</h2>
 <input id="name" placeholder="Your Name">
@@ -243,11 +230,11 @@ video{
 <button onclick="joinRoom()">ENTER</button>
 </div>
 
-<!-- CHAT -->
+<!-- CHAT SCREEN -->
 <div id="chat">
 <header>
-<span id="roomTitle"></span>
-<div>
+<span id="roomTitle">Room</span>
+<div class="header-buttons">
 <button onclick="startCall()">📞 Call</button>
 <button onclick="endCall()">❌ End</button>
 </div>
@@ -256,16 +243,18 @@ video{
 <div id="messages"></div>
 
 <footer>
-<input id="text" placeholder="Message">
+<input id="text" placeholder="Type a message...">
 <input type="file" id="img" accept="image/*">
 <button onclick="send()">➤</button>
 </footer>
 
+<div class="video-container">
 <video id="local" autoplay playsinline muted></video>
 <video id="remote" autoplay playsinline></video>
 </div>
+</div>
 
-<!-- INCOMING CALL -->
+<!-- INCOMING CALL POPUP -->
 <div id="popup">
 <div class="popupBox">
 <h3>Incoming Call</h3>
@@ -274,7 +263,7 @@ video{
 </div>
 </div>
 
-<!-- SESSION LOCK -->
+<!-- SESSION LOCK POPUP -->
 <div id="lock">
 <div class="popupBox">
 <h3>🔒 Session Locked</h3>
@@ -288,15 +277,18 @@ video{
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-/* 🔥 FIREBASE CONFIG */
-firebase.initializeApp({
-  apiKey:"YOUR_API_KEY",
-  authDomain:"YOUR_PROJECT.firebaseapp.com",
-  databaseURL:"https://YOUR_PROJECT.firebaseio.com",
-  projectId:"YOUR_PROJECT"
-});
-
-const db=firebase.database();
+// 🔥 FIREBASE CONFIG
+const firebaseConfig = {
+  apiKey: "AIzaSyDHYZDkcI0d7bm5CxXtSJQRhlhTkqL1Piw",
+  authDomain: "onlyus-44a12.firebaseapp.com",
+  databaseURL: "https://onlyus-44a12-default-rtdb.firebaseio.com",
+  projectId: "onlyus-44a12",
+  storageBucket: "onlyus-44a12.firebasestorage.app",
+  messagingSenderId: "808673364331",
+  appId: "1:808673364331:web:7e83c562a956f90a13e42e",
+  measurementId: "G-XQ34217SR2"
+};
+firebase.initializeApp(firebaseConfig);
 
 /* VARIABLES */
 let me,room,pc,localStream,msgRef,callRef;
@@ -317,8 +309,8 @@ function joinRoom(){
   chatDiv.style.display="flex";
   document.getElementById("roomTitle").innerText=room;
 
-  msgRef=db.ref("rooms/"+room+"/msgs");
-  callRef=db.ref("rooms/"+room+"/call");
+  msgRef=firebase.database().ref("rooms/"+room+"/msgs");
+  callRef=firebase.database().ref("rooms/"+room+"/call");
 
   listenMsgs();
   listenCall();
@@ -331,7 +323,6 @@ function send(){
     msgRef.push({from:me,text,seen:false});
     document.getElementById("text").value="";
   }
-
   const file=document.getElementById("img").files[0];
   if(file){
     const reader=new FileReader();
@@ -356,15 +347,17 @@ function listenMsgs(){
   });
 }
 
-/* WEBRTC + TURN CONFIG */
+/* WEBRTC + MULTI TURN CONFIG */
 const pcConfig={
   iceServers:[
     {urls:"stun:stun.l.google.com:19302"},
-    {urls:"turn:openrelay.metered.ca:443",username:"openrelayproject",credential:"openrelayproject"}
+    {urls:"stun:stun1.l.google.com:19302"},
+    {urls:"turn:openrelay.metered.ca:443",username:"openrelayproject",credential:"openrelayproject"},
+    {urls:"turn:openrelay.metered.ca:443?transport=tcp",username:"openrelayproject",credential:"openrelayproject"}
   ]
 };
 
-/* START CALL (Caller) */
+/* START CALL */
 async function startCall(){
   await setupPC();
   const offer=await pc.createOffer();
@@ -372,7 +365,7 @@ async function startCall(){
   callRef.set({from:me,type:"offer",sdp:offer,status:"calling"});
 }
 
-/* ACCEPT CALL (Receiver) */
+/* ACCEPT CALL */
 async function acceptCall(){
   popup.style.display="none";
   await setupPC();
@@ -385,16 +378,10 @@ async function acceptCall(){
 }
 
 /* REJECT CALL */
-function rejectCall(){
-  popup.style.display="none";
-  callRef.update({status:"rejected"});
-}
+function rejectCall(){popup.style.display="none";callRef.update({status:"rejected"});}
 
 /* END CALL */
-function endCall(){
-  if(localStream) localStream.getTracks().forEach(t=>t.stop());
-  callRef.set({status:"ended"});
-}
+function endCall(){if(localStream) localStream.getTracks().forEach(t=>t.stop()); callRef.set({status:"ended"});}
 
 /* SETUP PEER CONNECTION */
 async function setupPC(){
@@ -408,7 +395,7 @@ async function setupPC(){
   };
 }
 
-/* LISTEN CALL STATE */
+/* LISTEN CALL */
 function listenCall(){
   callRef.on("value",snap=>{
     const c=snap.val();
@@ -416,7 +403,6 @@ function listenCall(){
     if(c.status=="calling" && c.from!=me) popup.style.display="flex";
     if(c.type=="answer" && c.from!=me) pc.setRemoteDescription(new RTCSessionDescription(c.sdp));
   });
-
   callRef.child("ice").on("child_added",snap=>{
     if(pc) pc.addIceCandidate(snap.val());
   });
